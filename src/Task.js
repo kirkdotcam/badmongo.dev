@@ -1,6 +1,6 @@
 import {randomUUID} from "node:crypto"
 
-export class Task {
+export default class Task {
   constructor({targetDatabase}){
     this.id = randomUUID()
     this.targetDatabase = targetDatabase
