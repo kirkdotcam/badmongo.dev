@@ -37,7 +37,28 @@ export default class BadGrouping extends Task {
   async run(){
     await this.usersCollection.aggregate([
       {$unwind: "historicalAddresses"},
-      {$group: {}}
+      {$unwind: "ethAccounts"},
+      {$group: {
+        "_id":"$historicalAddresses.city",
+        "customersEverInCity":{
+          $sum: 1
+        },
+        "countCurrentlyInCity":{
+          $sum: {$cond:{
+            if: {$eq: [
+              "$historicalAddresses.city",
+              "$currentAddress.city"
+            ] } ,
+            then: 1,
+            else: 0
+          }}
+        },
+        "wallets":{
+          $addToSet: "$ethAccounts"
+        },
+        "" 
+
+      }}
     ])
   }
 
