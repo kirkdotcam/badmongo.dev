@@ -1,4 +1,4 @@
-import {faker} from "@faker-js/faker"
+import { faker } from "@faker-js/faker"
 
 /**
  * Generates a dataset of specified type and size.
@@ -11,19 +11,19 @@ import {faker} from "@faker-js/faker"
  * @returns {Array<Array<Object>>} An array containing batches of generated data.
  */
 function generateDataset({
-  numDocs, 
-  numBatches, 
+  numDocs,
+  numBatches,
   typeOfData,
   additionalParams
-  }){
-  
+}) {
+
   let batchSize = numDocs / numBatches
- 
-  let allData = [] 
 
-  let generateMethod 
+  let allData = []
 
-  switch(typeOfData){
+  let generateMethod
+
+  switch (typeOfData) {
     case "person":
       generateMethod = createPerson
       break
@@ -37,8 +37,8 @@ function generateDataset({
       generateMethod = createPerson
   }
 
-  for (let batch of [...Array(numBatches)] ){
-    let generatedData = [...Array(batchSize)].map(()=> generateMethod(additionalParams))
+  for (let batch of [...Array(numBatches)]) {
+    let generatedData = [...Array(batchSize)].map(() => generateMethod(additionalParams))
 
     allData.push(generatedData)
   }
@@ -51,7 +51,7 @@ function generateDataset({
  *
  * @returns {Object} An object representing a random address.
  */
-function createAddress(){
+function createAddress() {
   return {
     address: faker.location.streetAddress(),
     location: [
@@ -71,21 +71,22 @@ function createAddress(){
  * @param {number} [numAddresses=1] - The number of historical addresses to generate for the person.
  * @returns {Object} An object representing a random person.
  */
-function createPerson({numWallets = 4, numAddresses} ){
+function createPerson({ numWallets = 4, numAddresses }) {
   let newPerson = {
-  name: faker.person.fullName(),
-  gender: faker.person.gender(),
-  sex: faker.person.sex(),
-  occupation: faker.person.jobTitle(),
-  bio: faker.person.bio(),
-  ethAccounts: [...Array(numWallets)].map(()=>faker.finance.ethereumAddress())
+    name: faker.person.fullName(),
+    gender: faker.person.gender(),
+    sex: faker.person.sex(),
+    occupation: faker.person.jobTitle(),
+    bio: faker.person.bio(),
+    ethAccounts: [...Array(numWallets)].map(() => faker.finance.ethereumAddress()),
+    accountTotal: faker.number.float({ multiple: 0.25, max: 800, min: 10 })
   }
- 
-  if (numAddresses > 1){
-    newPerson.historicalAddresses = [...Array(numAddresses)].map(()=> createAddress())
+
+  if (numAddresses > 1) {
+    newPerson.historicalAddresses = [...Array(numAddresses)].map(() => createAddress())
     newPerson.currentAddress = newPerson.historicalAddresses[0]
   } else {
-    newPerson.currentAddress = createAddress() 
+    newPerson.currentAddress = createAddress()
   }
   return newPerson
 }
@@ -97,16 +98,16 @@ function createPerson({numWallets = 4, numAddresses} ){
  * @param {number} [numVerbs=4] - The number of description verbs to generate for the recipe.
  * @returns {Object} An object representing a random recipe.
  */
-function createRecipe({numVerbs=4}){
-  return{
+function createRecipe({ numVerbs = 4 }) {
+  return {
     item: faker.food.dish(),
     cuisine: faker.food.ethnicCategory(),
     description: faker.food.description(),
-    descriptionVerbs: [...Array(numVerbs)].map(()=> faker.food.adjective()),
-    garnishOrSpin: [...Array(5)].map(()=> faker.food.ingredient())
+    descriptionVerbs: [...Array(numVerbs)].map(() => faker.food.adjective()),
+    garnishOrSpin: [...Array(5)].map(() => faker.food.ingredient())
 
   }
-  
+
 }
 
 /**
@@ -115,10 +116,10 @@ function createRecipe({numVerbs=4}){
  * @param {number} [pairsWithDegree=1] - The number of ingredients to pair with.
  * @returns {Object} An object representing a random ingredient pairing.
  */
-function createPairsWith(pairsWithDegree=1){
+function createPairsWith(pairsWithDegree = 1) {
   return {
     item: faker.food.ingredient(),
-    pairsWith: [...Array(pairsWithDegree)].map(()=>faker.food.ingredient())
+    pairsWith: [...Array(pairsWithDegree)].map(() => faker.food.ingredient())
   }
 }
 
