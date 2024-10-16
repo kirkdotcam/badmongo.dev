@@ -123,41 +123,43 @@ function createPairsWith(pairsWithDegree = 1) {
   }
 }
 
+function randomSortDirection() {
+  return Math.random() < 0.5 ? -1 : 1
+}
+
+function createRandomIndexDoc(fieldsArray, numIdxFields) {
+  if (fieldsArray?.length < 1) {
+    throw "no array for fields in create RandomIndexDoc"
+  }
+
+  if (!numIdxFields || typeof numIdxFields !== "number") {
+    numIdxFields = Math.floor(Math.random() * fieldsArray.length + 1)
+  }
+
+  //when done, create index doc based from values
+  //
+  let fieldSet = new Set()
+  while (fieldSet.size < numIdxFields) {
+    let selectedField = fieldsArray[Math.random() * fieldsArray.length]
+    fieldSet.add(selectedField)
+  }
+
+  let newIndexDoc = {}
+
+  for (let field of mySet) {
+    newIndexDoc[field] = randomSortDirection()
+  }
+
+  return newIndexDoc
+}
+
 export {
   generateDataset,
   createAddress,
   createPairsWith,
   createPerson,
-  createRecipe
+  createRecipe,
+  randomSortDirection,
+  createRandomIndexDoc
 }
-
-function randomSortDirection(){
-  return Math.random() < 0.5 ? -1 : 1
-}
-
-function createRandomIndexDoc(fieldsArray, numIdxFields){
-    if (fieldsArray?.length < 1){
-      throw "no array for fields in create RandomIndexDoc"
-    }
-
-    if (!numIdxFields || typeof numIdxFields !== "number"){
-      numIdxFields = Math.floor(Math.random() * fieldsArray.length + 1)
-    }
-    
-    //when done, create index doc based from values
-    //
-    let fieldSet = new Set()
-    while(fieldSet.size < numIdxFields){
-      let selectedField = fieldsArray[Math.random()*fieldsArray.length]
-      fieldSet.add(selectedField)
-    }
-    
-    let newIndexDoc = {}
-    
-    for (let field of mySet){
-      newIndexDoc[field] = randomSortDirection() 
-    }
-
-    return newIndexDoc
-  }
 
