@@ -1,20 +1,27 @@
-import {randomUUID} from "node:crypto"
+import { randomUUID } from "node:crypto"
 
 export default class Task {
-  constructor({targetDatabase}){
+  constructor({ targetDatabase }) {
     this.id = randomUUID()
     this.targetDatabase = targetDatabase
   }
 
-  setup(){}
+  async setup() { }
 
-  run(){}
+  async run() { }
 
-  cleanup(){}
+  async cleanup() { }
 
-  execute(){
-    throw Error(`Task ${this.id} failed. All tasks must have an execute`)
+  async execute() {
+    // throw Error(`Task ${this.id} failed. All tasks must have an execute`)
+    console.log(`setting up task`)
+    await setup()
+    console.log(`running task`)
+    await run()
+    console.log(`cleaning up task`)
+    await cleanup()
+
   }
 
-  errorHandle(){}
+  errorHandle() { }
 }
