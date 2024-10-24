@@ -15,11 +15,11 @@ export default class Task {
   async execute() {
     // throw Error(`Task ${this.id} failed. All tasks must have an execute`)
     console.log(`setting up task`)
-    await setup()
+    await this.setup()
     console.log(`running task`)
-    await run()
+    await this.run()
     console.log(`cleaning up task`)
-    await cleanup()
+    await this.cleanup()
 
   }
 

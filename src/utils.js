@@ -56,7 +56,7 @@ function createAddress() {
     address: faker.location.streetAddress(),
     location: [
       faker.location.latitude(),
-      faker.location.longiutude()
+      faker.location.longitude()
     ],
     city: faker.location.city(),
     state: faker.location.state(),
@@ -128,7 +128,7 @@ function randomSortDirection() {
 }
 
 function createRandomIndexDoc(fieldsArray, numIdxFields) {
-  if (fieldsArray?.length < 1) {
+  if (fieldsArray?.length < 1 || fieldsArray === undefined) {
     throw "no array for fields in create RandomIndexDoc"
   }
 
@@ -139,14 +139,15 @@ function createRandomIndexDoc(fieldsArray, numIdxFields) {
   //when done, create index doc based from values
   //
   let fieldSet = new Set()
+
   while (fieldSet.size < numIdxFields) {
-    let selectedField = fieldsArray[Math.random() * fieldsArray.length]
+    let selectedField = fieldsArray[Math.floor(Math.random() * fieldsArray.length)]
     fieldSet.add(selectedField)
   }
 
   let newIndexDoc = {}
 
-  for (let field of mySet) {
+  for (let field of fieldSet) {
     newIndexDoc[field] = randomSortDirection()
   }
 
