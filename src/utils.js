@@ -116,7 +116,7 @@ function createRecipe({ numVerbs = 4 }) {
  * @param {number} [pairsWithDegree=1] - The number of ingredients to pair with.
  * @returns {Object} An object representing a random ingredient pairing.
  */
-function createPairsWith(pairsWithDegree = 1) {
+function createPairsWith({ pairsWithDegree = 1 }) {
   return {
     item: faker.food.ingredient(),
     pairsWith: [...Array(pairsWithDegree)].map(() => faker.food.ingredient())
