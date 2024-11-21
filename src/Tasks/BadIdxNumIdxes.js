@@ -12,7 +12,7 @@ export default class BadIdxNumIdxes extends Task {
   ) {
     await this.client.connect()
     this.testDb = this.client.db("test")
-    this.usersCollection = this.testDb.collection("users")
+    this.usersCollection = await this.testDb.collection("users")
     this.tasksCollection = this.testDb.collection("task")
 
     await this.tasksCollection.drop()
@@ -92,4 +92,10 @@ export default class BadIdxNumIdxes extends Task {
     await this.usersCollection.bulkWrite(bulkWrites, { ordered: false })
   }
 
+  async cleanup() { }
+  async execute() {
+    await this.setup()
+    await this.run()
+    await this.cleanup()
+  }
 }
