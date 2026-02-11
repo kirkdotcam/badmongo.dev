@@ -5,7 +5,8 @@ import { generateDataset } from "../utils.js"
 export default class BadLookup extends Task {
   constructor({ targetDatabase, collection }) {
     super({ targetDatabase })
-    this.client = new MongoClient(this.targetDatabase.uri)
+    this.dbURI = this.targetDatabase.uri
+    this.taskType = "BADLOOKUP"
   }
 
   async setup() {
@@ -19,14 +20,25 @@ export default class BadLookup extends Task {
       }
     })
 
-    await this.client.connect()
+    this.client = await new MongoClient(this.dbURI).connect()
+
     this.testDb = this.client.db("test")
     this.pairingCollection = this.testDb.collection("foodPairing")
-    // this.testDb.dropDatabase()
+    this.pairingMergedCollection = this.testDb.collection("foodPairingMerged")
+    this.pairingCollection.drop()
+    this.pairingMergedCollection.drop()
+
 
     for (let batch of dataset) {
       await this.pairingCollection.insertMany(batch)
     }
+
+    await this.pairingCollection.aggregate([
+      { $set: { a: { $range: [0, 60] } } },
+      { $unwind: "$a" },
+      { $project: { a: 0, _id: 0 } },
+      { $out: "foodPairing" }
+    ]).toArray()
 
     this.tasksCollection = this.testDb.collection("task")
 
@@ -38,7 +50,8 @@ export default class BadLookup extends Task {
   }
 
   async run() {
-    this.pairingCollection.aggregate([{
+    console.log("starting BadLookup run")
+    await this.pairingCollection.aggregate([{
       $lookup: {
         from: "foodPairing",
         foreignField: "item",
@@ -47,13 +60,18 @@ export default class BadLookup extends Task {
       },
     }, {
       $out: "foodPairingMerged"
-    }])
+    }]).toArray()
+
+    console.log("finishing BadLookup run")
   }
 
-  async cleanup() { }
+  async cleanup() {
+
+  }
   async execute() {
     await this.setup()
     await this.run()
     await this.cleanup()
+    return
   }
 }
