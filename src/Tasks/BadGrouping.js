@@ -1,4 +1,4 @@
-import { Task } from "../Task.js"
+import Task from "../Task.js"
 import { generateDataset, randomSortDirection } from "../utils.js"
 import { MongoClient } from "mongodb"
 
