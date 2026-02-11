@@ -5,6 +5,7 @@
  * randomly generate a bunch of tasks for all of those targets
  * assign all to task queue
  * begin execution
+ * TODO: kill child nodes when all tasks completed.
  */
 
 import targets from "./targets.json" with {type: "json"}
