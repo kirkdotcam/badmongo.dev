@@ -5,12 +5,13 @@ import { MongoClient } from "mongodb"
 export default class BadIdxNumIdxes extends Task {
   constructor({ targetDatabase }) {
     super({ targetDatabase })
-    console.log(this.targetDatabase.uri)
-    this.client = new MongoClient(this.targetDatabase.uri)
+    this.dbURI = this.targetDatabase.uri
+    this.taskType = "BADIDXNUMIDXES"
   }
   async setup(
   ) {
-    await this.client.connect()
+
+    this.client = await new MongoClient(this.dbURI).connect()
     this.testDb = this.client.db("test")
     this.usersCollection = await this.testDb.collection("users")
     this.tasksCollection = this.testDb.collection("task")
