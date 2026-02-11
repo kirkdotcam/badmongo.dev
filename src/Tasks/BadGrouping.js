@@ -1,11 +1,12 @@
-import {Task} from "../Task.js"
-import {generateDataset, randomSortDirection} from "../utils.js"
-import {MongoClient } from "mongodb"
+import { Task } from "../Task.js"
+import { generateDataset, randomSortDirection } from "../utils.js"
+import { MongoClient } from "mongodb"
 
 export default class BadGrouping extends Task {
   constructor({ targetDatabase, collection }) {
     super(targetDatabase)
-    this.client = new MongoClient(this.targetDatabase.uri)
+    this.dbURI = this.targetDatabase.uri
+    this.taskType = "BADGROUPING"
   }
 
   async setup() {
@@ -19,10 +20,10 @@ export default class BadGrouping extends Task {
       }
     })
 
-    await this.client.connect()
-    this.testDb = await this.client.db("test")
+    this.client = await new MongoClient(this.dbURI).connect()
+    this.testDb = this.client.db("test")
     this.usersCollection = await testDb.collection("users")
-    
+
     await this.testDb.drop()
 
     for (let batch of dataset) {
